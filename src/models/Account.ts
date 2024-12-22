@@ -30,6 +30,9 @@ class Account extends Model {
   public createdAt!: Date;
   public updatedAt!: Date;
   public deletedAt?: Date;
+  public verificationToken?: string;
+  public verificationTokenExpires?: Date;
+  public isVerified?: boolean;
 }
 
 Account.init({
@@ -94,7 +97,22 @@ Account.init({
     type: DataTypes.DATE,
     allowNull: true,
     comment: '删除时间（软删除）',
-  }
+  },
+  verificationToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    comment: '邮箱验证令牌',
+  },
+  verificationTokenExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    comment: '验证令牌过期时间',
+  },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    comment: '邮箱是否已验证',
+  },
 }, {
   sequelize,
   modelName: 'Account',
