@@ -1,5 +1,21 @@
 import { NextResponse } from "next/server";
 import User from "@/models/User";
+import { UserService } from "@/services/userService";
+
+/**
+ * 添加用户
+ * @param request 请求
+ * @returns 用户数据
+ */
+export async function POST(request: Request) {
+    try {
+      const body = await request.json();
+      const user = await UserService.createUser(body);
+      return NextResponse.json(user);
+    } catch (error) {
+      return NextResponse.json({ error: "添加用户失败" }, { status: 500 });
+    }
+  }
 
 /**
  * 获取用户数据
@@ -29,3 +45,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "获取用户数据失败" }, { status: 500 });
   }
 }
+
