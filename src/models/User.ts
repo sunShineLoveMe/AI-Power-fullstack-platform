@@ -5,6 +5,11 @@ class User extends Model {
 }
 
 User.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -12,6 +17,11 @@ User.init({
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
 }, {
   sequelize,

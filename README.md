@@ -1,5 +1,5 @@
 #  栉云科技
-## next.js开发规范
+## 全栈开发规范
 - app 
   - App Router
 - pages
