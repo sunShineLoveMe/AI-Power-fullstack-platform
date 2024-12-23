@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   },
   /* config options here */
   images: {
+    disableStaticImages: false, // 允许静态图片优化
     remotePatterns: [
       {
         protocol: 'https',
