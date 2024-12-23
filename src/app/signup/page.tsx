@@ -30,11 +30,14 @@ export default function SignupPage() {
         body: JSON.stringify(userData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('注册失败');
+        throw new Error(data.message || '注册失败');
       }
 
-      router.push('/dashboard');
+      setError(null);
+      router.push('/verify-email-notice');
     } catch (err) {
       setError(err instanceof Error ? err.message : '注册失败');
     } finally {
