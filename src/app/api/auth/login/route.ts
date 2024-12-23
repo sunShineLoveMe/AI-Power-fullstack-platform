@@ -106,22 +106,30 @@ export async function POST(req: Request) {
       status: 'active'
     });
 
-    // 7. 设置Cookie
-    const response = createResponse(
-      { token },
-      "登录成功",
-      true,
-      200
+    // 7. 创建响应对象
+    const response = NextResponse.json(
+      {
+        success: true,
+        message: "登录成功",
+        data: { token }
+      },
+      { status: 200 }
     );
 
-    // 设置HttpOnly Cookie
-    response.cookies.set('token', token, {
+    // 8. 设置 cookie
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60, // 24小时
-      path: '/'
-    });
+      secure: false, // 开发环境设置为 false
+      sameSite: 'lax' as const,
+      path: '/',
+      maxAge: 24 * 60 * 60, // 24小时，单位是秒
+    };
+
+    // 使用 Set-Cookie 头部设置 cookie
+    response.headers.set(
+      'Set-Cookie',
+      `token=${token}; Path=${cookieOptions.path}; Max-Age=${cookieOptions.maxAge}; ${cookieOptions.httpOnly ? 'HttpOnly;' : ''} SameSite=${cookieOptions.sameSite}`
+    );
 
     return response;
 

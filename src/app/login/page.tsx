@@ -1,4 +1,5 @@
 "use client"
+
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,25 +15,26 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: event.currentTarget.email.value,
+          password: event.currentTarget.password.value
+        }),
         credentials: 'include'
       });
+
+      console.log("请求响应....");
+      console.log(response);
 
       const data = await response.json();
 
       if (data.success) {
-        // 登录成功后直接跳转到仪表板
-        router.push('/dashboard');
+        window.location.replace('/dashboard');
       } else {
         setError(data.message || "登录失败");
       }
