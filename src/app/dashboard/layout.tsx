@@ -1,14 +1,14 @@
-// 这是服务端组件，不需要 "use client"
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import DashboardNav from './DashboardNav';
+import Navbar from '@/components/dashboard/Navbar';
+import Sidebar from '@/components/dashboard/Sidebar';
+import BottomBar from '@/components/dashboard/BottomBar';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // 在服务端进行认证检查
   const headersList = await headers();
   const token = headersList.get('cookie')?.includes('token');
 
@@ -17,11 +17,26 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <DashboardNav />
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#000033] via-[#000044] to-[#000066]">
+      <div className="flex-none">
+        <Navbar />
+      </div>
+
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex-none">
+          <Sidebar />
+        </div>
+
+        <main className="flex-1 overflow-y-auto p-8">
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-xl p-6">
+            {children}
+          </div>
+        </main>
+      </div>
+
+      <div className="flex-none">
+        <BottomBar />
+      </div>
     </div>
   );
-} 
+}
