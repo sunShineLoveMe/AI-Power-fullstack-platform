@@ -7,22 +7,22 @@ const menuItems = [
   { 
     name: '仪表盘', 
     path: '/dashboard', 
-    icon: 'dashboard'  // 仪表盘图标
+    icon: 'dashboard'
   },
   { 
     name: '用户管理', 
     path: '/dashboard/users', 
-    icon: 'group'  // 用户组图标
+    icon: 'group'
   },
   { 
     name: '数据分析', 
     path: '/dashboard/analytics', 
-    icon: 'analytics'  // 数据分析图标
+    icon: 'analytics'
   },
   { 
     name: '系统设置', 
     path: '/dashboard/settings', 
-    icon: 'settings'  // 设置图标
+    icon: 'settings'
   },
 ];
 
@@ -30,20 +30,26 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-[#000044]/50 backdrop-blur-lg w-64 shadow-lg">
-      <div className="p-4">
-        <div className="space-y-4">
+    <aside className="bg-slate-900/50 backdrop-blur-xl w-64 border-r border-slate-700/50">
+      <div className="p-6">
+        <div className="space-y-2">
           {menuItems.map((item) => (
             <Link
               key={item.path}
               href={item.path}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 pathname === item.path
-                  ? 'bg-white/20 text-white'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
               }`}
             >
-              <span className="material-icons-round text-2xl">{item.icon}</span>
+              <span className={`material-icons-round text-xl ${
+                pathname === item.path
+                  ? 'text-blue-400'
+                  : 'text-slate-400 group-hover:text-slate-200'
+              }`}>
+                {item.icon}
+              </span>
               <span className="font-medium">{item.name}</span>
             </Link>
           ))}

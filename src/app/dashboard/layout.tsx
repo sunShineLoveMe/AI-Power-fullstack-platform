@@ -17,7 +17,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#000033] via-[#000044] to-[#000066]">
+    <div className="h-screen flex flex-col">
       <div className="flex-none">
         <Navbar />
       </div>
@@ -28,8 +28,10 @@ export default async function DashboardLayout({
         </div>
 
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-xl p-6">
-            {children}
+          <div className="bg-slate-800/50 backdrop-blur-xl rounded-xl shadow-2xl border border-slate-700/50">
+            <div className="p-6">
+              {children}
+            </div>
           </div>
         </main>
       </div>
