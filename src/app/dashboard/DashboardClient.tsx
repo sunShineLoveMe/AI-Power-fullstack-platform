@@ -1,17 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-interface UserInfo {
-  username: string;
-  email: string;
-  lastLoginAt: string;
-}
+import { useState } from 'react';
+import { HotWordCard } from '@/components/dashboard/HotWordCard';
+import { mockPlatformData } from '@/mock/dashboardData';
 
 export function DashboardClient({ initialData }: { initialData: any }) {
-  const router = useRouter();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(initialData?.data || null);
+  const [userInfo] = useState(initialData?.data || null);
 
   if (!userInfo) {
     return (
@@ -26,17 +20,22 @@ export function DashboardClient({ initialData }: { initialData: any }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">欢迎回来, {userInfo.username}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-blue-700">账号信息</h3>
-            <p className="mt-2 text-gray-600">邮箱: {userInfo.email}</p>
-            <p className="text-gray-600">
-              上次登录: {new Date(userInfo.lastLoginAt).toLocaleString('zh-CN')}
-            </p>
-          </div>
+      {/* 欢迎信息卡片 */}
+      <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50">
+        <h2 className="text-2xl font-bold mb-4 text-slate-100">
+          欢迎回来, {userInfo.username}
+        </h2>
+        <div className="text-slate-400">
+          <p>邮箱: {userInfo.email}</p>
+          <p>上次登录: {new Date(userInfo.lastLoginAt).toLocaleString('zh-CN')}</p>
         </div>
+      </div>
+
+      {/* 热词卡片网格 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {mockPlatformData.map((platform) => (
+          <HotWordCard key={platform.platform} data={platform} />
+        ))}
       </div>
     </div>
   );

@@ -30,8 +30,10 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-slate-900/50 backdrop-blur-xl w-64 border-r border-slate-700/50">
-      <div className="p-6">
+    <aside className="bg-slate-900/50 backdrop-blur-xl w-64 border-r border-slate-700/50 h-full flex flex-col">
+      <div className="h-4" />
+      
+      <div className="flex-1 p-6">
         <div className="space-y-2">
           {menuItems.map((item) => (
             <Link
@@ -53,6 +55,13 @@ export default function Sidebar() {
               <span className="font-medium">{item.name}</span>
             </Link>
           ))}
+        </div>
+      </div>
+
+      <div className="p-6 border-t border-slate-700/50">
+        <div className="flex items-center space-x-3 text-slate-400">
+          <span className="material-icons-round text-xl">info</span>
+          <span className="text-sm">版本 1.0.0</span>
         </div>
       </div>
     </aside>
