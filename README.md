@@ -1,4 +1,4 @@
-# AI+泛大数据平台
+# AI+全维智析数据中枢
 
 ## UI 设计规范
 
@@ -180,7 +180,7 @@ src/
 ├── middleware.ts                       # 新增：认证中间件
 ├── models/
 │   ├── Account.ts                     # 账号模型
-│   ├── User.ts                        # 用��模型
+│   ├── User.ts                        # 用户模型
 │   └── Profile.ts                     # 个人资料模型
 ├── services/
 │   ├── authService.ts                 # 新增：认证服务

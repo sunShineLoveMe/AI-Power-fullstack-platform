@@ -21,7 +21,7 @@ export function DashboardClient({ initialData }: { initialData: any }) {
   return (
     <div className="space-y-6">
       {/* 欢迎信息卡片 */}
-      <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50">
+      {/* <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50">
         <h2 className="text-2xl font-bold mb-4 text-slate-100">
           欢迎回来, {userInfo.username}
         </h2>
@@ -29,7 +29,7 @@ export function DashboardClient({ initialData }: { initialData: any }) {
           <p>邮箱: {userInfo.email}</p>
           <p>上次登录: {new Date(userInfo.lastLoginAt).toLocaleString('zh-CN')}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* 热词卡片网格 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

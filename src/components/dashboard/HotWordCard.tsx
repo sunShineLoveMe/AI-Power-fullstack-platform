@@ -3,6 +3,18 @@
 import { useState } from 'react';
 import { PlatformData } from '@/types/dashboard';
 import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register the necessary components
+ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
 interface HotWordCardProps {
   data: PlatformData;
@@ -25,7 +37,7 @@ export function HotWordCard({ data }: HotWordCardProps) {
       onClick={() => setIsExpanded(!isExpanded)}
     >
       {/* 平台标题 */}
-      <div className="flex items-center space-x-3 mb-6">
+      <div className="flex items-center space-x-3 mb-4">
         <span className="material-icons-round text-2xl text-blue-400">
           {data.icon}
         </span>
@@ -35,15 +47,15 @@ export function HotWordCard({ data }: HotWordCardProps) {
       </div>
 
       {/* 热词列表 */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         {data.hotWords.map((hotWord, index) => (
           <div
             key={hotWord.id}
-            className="flex items-center justify-between p-3
+            className="flex items-center justify-between p-2
               bg-slate-900/30 rounded-lg
               hover:bg-slate-900/50 transition-colors"
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <span className="text-slate-400">#{index + 1}</span>
               <span className="text-slate-100">{hotWord.word}</span>
               <span className={`material-icons-round text-sm ${
@@ -58,7 +70,7 @@ export function HotWordCard({ data }: HotWordCardProps) {
             </div>
             
             {/* 趋势图 */}
-            <div className="w-24 h-12">
+            <div className="w-20 h-10">
               <Line
                 data={{
                   labels: hotWord.trend.map(t => new Date(t.timestamp).toLocaleDateString()),
