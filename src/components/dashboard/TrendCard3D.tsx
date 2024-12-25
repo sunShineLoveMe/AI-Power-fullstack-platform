@@ -95,119 +95,125 @@ export function TrendCard3D() {
   // 自动轮播
   useEffect(() => {
     if (!isAutoPlay) return;
-    
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % trends.length);
     }, 5000);
-
     return () => clearInterval(timer);
   }, [isAutoPlay, trends.length]);
 
-  // 3D 轮播动画变体
-  const cardVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      rotateY: direction > 0 ? 45 : -45,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      rotateY: 0,
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 100,
-        damping: 15
+  // 在客户端注入样式
+  useEffect(() => {
+    const styles = `
+      .carousel-3d {
+        perspective: 2000px;
+        transform-style: preserve-3d;
       }
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-      rotateY: direction < 0 ? 45 : -45,
-      transition: {
-        duration: 0.5,
-        type: "spring",
-        stiffness: 100,
-        damping: 15
+
+      .carousel-item {
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-    })
-  };
+
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
+      .animate-shimmer {
+        animation: shimmer 2s infinite;
+      }
+    `;
+
+    // 只在客户端执行
+    if (typeof document !== 'undefined') {
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = styles;
+      document.head.appendChild(styleSheet);
+
+      // 清理函数
+      return () => {
+        document.head.removeChild(styleSheet);
+      };
+    }
+  }, []);
 
   return (
-    <div className="relative h-[400px] w-full perspective-1000">
-      <AnimatePresence initial={false} custom={1}>
-        <motion.div
-          key={currentIndex}
-          custom={1}
-          variants={cardVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className={`absolute inset-0 ${trends[currentIndex].color.gradient} 
-            ${trends[currentIndex].color.primary} ${trends[currentIndex].color.secondary}
-            rounded-2xl p-6 shadow-xl backdrop-blur-xl
-            border border-white/10 transform-gpu`}
-        >
-          {/* 卡片内容 */}
-          <div className="relative h-full">
-            {/* 头部 */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <span className="material-icons-round text-3xl text-white/90">
-                  {trends[currentIndex].icon}
-                </span>
-                <h3 className="text-2xl font-bold text-white">
-                  {trends[currentIndex].title}
-                </h3>
+    <div className="relative w-full h-[380px] flex items-center justify-center -mt-8">
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 bg-gradient-radial from-slate-800/50 via-transparent to-transparent" />
+      
+      {/* 3D 轮播容器 */}
+      <div className="carousel-3d relative w-[500px] h-[300px]">
+        {trends.map((trend, index) => (
+          <div
+            key={trend.id}
+            className={`carousel-item absolute w-[280px] h-[220px] 
+              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+              ${trend.color.gradient} ${trend.color.primary} ${trend.color.secondary}
+              rounded-lg p-2.5 shadow-xl backdrop-blur-xl border border-white/10`}
+            style={{
+              transform: `
+                translate(-50%, -50%) 
+                rotateY(${(index - currentIndex) * (360 / trends.length)}deg)
+                translateZ(250px)
+              `,
+              transformOrigin: 'center center',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              opacity: Math.abs(index - currentIndex) <= 1 ? 1 : 0.5,
+            }}
+          >
+            {/* 调整卡片内容布局 */}
+            <div className="relative h-full flex flex-col">
+              {/* 头部 - 进一步减小间距 */}
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center space-x-1">
+                  <span className="material-icons-round text-base text-white/90">
+                    {trend.icon}
+                  </span>
+                  <h3 className="text-sm font-bold text-white">
+                    {trend.title}
+                  </h3>
+                </div>
               </div>
-              <div className="flex space-x-2">
-                {trends.map((_, idx) => (
+
+              {/* 趋势列表 - 进一步减小间距和字体 */}
+              <div className="space-y-1 flex-1">
+                {trend.trends.map((item, idx) => (
                   <div
                     key={idx}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 
-                      ${idx === currentIndex ? 'bg-white' : 'bg-white/30'}`}
-                  />
+                    className="bg-white/10 rounded-md p-1 backdrop-blur-lg
+                      transform transition-all duration-300 hover:scale-105"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/80 text-[10px]">{item.label}</span>
+                      <span className={`material-icons-round text-[8px]
+                        ${item.change === 'up' ? 'text-green-400' :
+                          item.change === 'down' ? 'text-red-400' :
+                          'text-white/60'}`}
+                      >
+                        {item.change === 'up' ? 'trending_up' :
+                         item.change === 'down' ? 'trending_down' :
+                         'trending_flat'}
+                      </span>
+                    </div>
+                    <div className="text-xs font-semibold text-white mt-0.5">
+                      {item.value}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
-
-            {/* 趋势列表 */}
-            <div className="space-y-4">
-              {trends[currentIndex].trends.map((trend, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white/10 rounded-lg p-4 backdrop-blur-lg
-                    transform transition-all duration-300 hover:scale-105"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/80">{trend.label}</span>
-                    <span className={`material-icons-round text-sm
-                      ${trend.change === 'up' ? 'text-green-400' :
-                        trend.change === 'down' ? 'text-red-400' :
-                        'text-white/60'}`}
-                    >
-                      {trend.change === 'up' ? 'trending_up' :
-                       trend.change === 'down' ? 'trending_down' :
-                       'trending_flat'}
-                    </span>
-                  </div>
-                  <div className="text-xl font-semibold text-white mt-2">
-                    {trend.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 光影效果 */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent 
-              via-white/5 to-transparent animate-shimmer pointer-events-none" />
           </div>
-        </motion.div>
-      </AnimatePresence>
+        ))}
+      </div>
 
       {/* 控制按钮 */}
-      <div className="absolute bottom-4 right-4 flex space-x-2 z-10">
+      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
         <button
           onClick={() => setIsAutoPlay(!isAutoPlay)}
           className="p-2 rounded-full bg-white/10 hover:bg-white/20 

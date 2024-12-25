@@ -39,10 +39,10 @@ export function DashboardClient({ initialData }: { initialData: any }) {
 
   return (
     <div className="space-y-6">
-       <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50">
-      <h2 className="text-2xl font-bold mb-4 text-slate-100">趋势分析</h2>
-      <TrendCard3D />
-    </div>
+      <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50 h-[500px] flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-bold text-slate-100 mb-4">趋势分析</h2>
+        <TrendCard3D />
+      </div>
       {/* 热词卡片网格 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {mockPlatformData.map((platform, index) => (

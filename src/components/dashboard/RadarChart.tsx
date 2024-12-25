@@ -364,6 +364,43 @@ export function RadarChart({ platform }: RadarChartProps) {
     }
   };
 
+  // 在客户端注入样式
+  useEffect(() => {
+    const styles = `
+      @keyframes ping-slow {
+        0% {
+          transform: scale(1);
+          opacity: 0.2;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.15;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.2;
+        }
+      }
+
+      .animate-ping-slow {
+        animation: ping-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+    `;
+
+    // 只在客户端执行
+    if (typeof document !== 'undefined') {
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = styles;
+      document.head.appendChild(styleSheet);
+
+      // 清理函数
+      return () => {
+        document.head.removeChild(styleSheet);
+      };
+    }
+  }, []);
+
   return (
     <div className="relative">
       {/* 背景装饰 */}
@@ -442,32 +479,4 @@ export function RadarChart({ platform }: RadarChartProps) {
       </div>
     </div>
   );
-}
-
-// 更新动画样式
-const styles = `
-  @keyframes ping-slow {
-    0% {
-      transform: scale(1);
-      opacity: 0.2;
-    }
-    50% {
-      transform: scale(1.05);
-      opacity: 0.15;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 0.2;
-    }
-  }
-
-  .animate-ping-slow {
-    animation: ping-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-`;
-
-// 将样式注入到组件中
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet); 
+} 
