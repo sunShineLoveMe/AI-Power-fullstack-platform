@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeatMapData, mockHeatMapData } from '@/mock/heatmapData';
 
 export function HeatMap() {
@@ -9,6 +9,16 @@ export function HeatMap() {
     key: keyof HeatMapData;
     direction: 'asc' | 'desc';
   } | null>(null);
+
+  // 生成16条数据
+  useEffect(() => {
+    const extendedData = Array(16).fill(null).map((_, index) => ({
+      ...mockHeatMapData[index % mockHeatMapData.length],
+      id: index, // 确保每条数据有唯一id
+      tag: `热词标签 ${index + 1}` // 生成不同的标签名
+    }));
+    setData(extendedData);
+  }, []);
 
   // 排序函数
   const sortData = (key: keyof HeatMapData) => {
@@ -48,17 +58,34 @@ export function HeatMap() {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="relative h-[500px] overflow-hidden">
+      <style jsx>{`
+        @keyframes scrollUp {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+        .scroll-container {
+          animation: scrollUp 30s linear infinite;
+        }
+        .scroll-container:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
       <table className="w-full">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm">
           <tr>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-slate-300">
+            <th className="w-[200px] px-4 py-3 text-left text-sm font-semibold text-slate-300">
               热词标签
             </th>
             {['likedCount', 'collectedCount', 'commentCount', 'shareCount', 'avgHeat'].map((key) => (
               <th 
                 key={key}
-                className="px-4 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-slate-100"
+                className="w-[160px] px-4 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-slate-100"
                 onClick={() => sortData(key as keyof HeatMapData)}
               >
                 {key === 'likedCount' ? '点赞数' :
@@ -74,35 +101,40 @@ export function HeatMap() {
             ))}
           </tr>
         </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr 
-              key={row.tag}
-              className="hover:bg-slate-800/30 transition-colors"
-            >
-              <td className="px-4 py-3 text-sm text-slate-300">
-                {row.tag}
-              </td>
-              {['likedCount', 'collectedCount', 'commentCount', 'shareCount', 'avgHeat'].map((key) => (
-                <td 
-                  key={key}
-                  className="px-4 py-3 text-sm"
-                  style={{
-                    background: getHeatColor(
-                      Number(row[key as keyof HeatMapData]), 
-                      getMaxValue(key as keyof HeatMapData)
-                    )
-                  }}
-                >
-                  <div className="text-slate-200 font-medium">
-                    {formatNumber(Number(row[key as keyof HeatMapData]))}
-                  </div>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
       </table>
+
+      <div className="scroll-container">
+        <table className="w-full">
+          <tbody>
+            {[...data, ...data].map((row, index) => (
+              <tr 
+                key={`${row.id}-${index}`}
+                className="hover:bg-slate-800/30 transition-colors"
+              >
+                <td className="w-[200px] px-4 py-3 text-sm text-slate-300">
+                  {row.tag}
+                </td>
+                {['likedCount', 'collectedCount', 'commentCount', 'shareCount', 'avgHeat'].map((key) => (
+                  <td 
+                    key={key}
+                    className="w-[160px] px-4 py-3 text-sm"
+                    style={{
+                      background: getHeatColor(
+                        Number(row[key as keyof HeatMapData]), 
+                        getMaxValue(key as keyof HeatMapData)
+                      )
+                    }}
+                  >
+                    <div className="text-slate-200 font-medium">
+                      {formatNumber(Number(row[key as keyof HeatMapData]))}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 } 

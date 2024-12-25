@@ -7,7 +7,7 @@ export default function DashboardNav() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold">AI+泛大数据平台</span>
+              <span className="text-xl font-bold">AI+全维智析数据中枢</span>
             </div>
           </div>
           <div className="flex items-center">

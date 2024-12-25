@@ -9,14 +9,20 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  Title,
+  Tooltip,
+  Legend
 } from 'chart.js';
 
-// 注册必要的 Chart.js 组件
+// 注册所有需要的 Chart.js 组件
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
 );
 
 interface HotWordCardProps {
@@ -134,11 +140,17 @@ export function HotWordCard({ data, flipDelay, flipInterval }: HotWordCardProps)
                       scales: {
                         x: { 
                           type: 'category',
-                          display: false 
+                          display: false,
+                          grid: {
+                            display: false
+                          }
                         }, 
                         y: { 
                           type: 'linear',
-                          display: false 
+                          display: false,
+                          grid: {
+                            display: false
+                          }
                         }
                       }
                     }}
@@ -220,11 +232,17 @@ export function HotWordCard({ data, flipDelay, flipInterval }: HotWordCardProps)
                       scales: {
                         x: { 
                           type: 'category',
-                          display: false 
+                          display: false,
+                          grid: {
+                            display: false
+                          }
                         }, 
                         y: { 
                           type: 'linear',
-                          display: false 
+                          display: false,
+                          grid: {
+                            display: false
+                          }
                         }
                       }
                     }}

@@ -1,4 +1,5 @@
 export interface HeatMapData {
+  id: number;
   tag: string;
   likedCount: number;
   collectedCount: number;
@@ -9,6 +10,7 @@ export interface HeatMapData {
 
 export const mockHeatMapData: HeatMapData[] = [
   {
+    id: 1,
     tag: "穿搭分享",
     likedCount: 25678,
     collectedCount: 12890,
@@ -17,6 +19,7 @@ export const mockHeatMapData: HeatMapData[] = [
     avgHeat: 11092
   },
   {
+    id: 2,
     tag: "美食探店",
     likedCount: 18965,
     collectedCount: 9876,
@@ -25,6 +28,7 @@ export const mockHeatMapData: HeatMapData[] = [
     avgHeat: 8426
   },
   {
+    id: 3,
     tag: "护肤经验",
     likedCount: 32456,
     collectedCount: 15678,
@@ -33,6 +37,7 @@ export const mockHeatMapData: HeatMapData[] = [
     avgHeat: 13983
   },
   {
+    id: 4,
     tag: "旅行日记",
     likedCount: 15678,
     collectedCount: 7890,
@@ -41,6 +46,7 @@ export const mockHeatMapData: HeatMapData[] = [
     avgHeat: 6870
   },
   {
+    id: 5,
     tag: "生活方式",
     likedCount: 28976,
     collectedCount: 13456,
