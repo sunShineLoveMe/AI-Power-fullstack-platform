@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { HotWordCard } from '@/components/dashboard/HotWordCard';
 import { HeatMap } from '@/components/dashboard/HeatMap';
 import { mockPlatformData } from '@/mock/dashboardData';
+import { RadarChart } from '@/components/dashboard/RadarChart';
 
 export function DashboardClient({ initialData }: { initialData: any }) {
   const [userInfo] = useState(initialData?.data || null);
@@ -53,6 +54,26 @@ export function DashboardClient({ initialData }: { initialData: any }) {
       <div className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50">
         <h2 className="text-2xl font-bold mb-4 text-slate-100">热力图</h2>
         <HeatMap />
+      </div>
+
+      {/* 雷达图部分 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {mockPlatformData.map((platform) => (
+          <div 
+            key={platform.platform}
+            className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50"
+          >
+            <div className="flex items-center space-x-3 mb-4">
+              <span className="material-icons-round text-2xl text-blue-400">
+                {platform.icon}
+              </span>
+              <h2 className="text-xl font-bold text-slate-100">
+                {platform.name}热词分析
+              </h2>
+            </div>
+            <RadarChart data={platform} platform={platform.platform} />
+          </div>
+        ))}
       </div>
     </div>
   );
