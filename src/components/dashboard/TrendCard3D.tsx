@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 // 定义卡片数据类型
 interface TrendData {
   id: number;
-  type: 'time' | 'user' | 'content' | 'spread';
+  type: 'time' | 'user' | 'content' | 'spread' | 'interaction' | 'growth' | 'region' | 'topic';
   title: string;
   icon: string;
   trends: {
@@ -32,9 +32,9 @@ const generateMockTrendData = (): TrendData[] => [
       gradient: 'bg-gradient-to-br'
     },
     trends: [
-      { label: '本周热门话题', value: '#时尚穿搭', change: 'up' },
-      { label: '视频趋势', value: '视频笔记热度上升45%', change: 'up' },
-      { label: '热门创作者', value: '@时尚博主', change: 'same' }
+      { label: '高峰发布时段', value: '20:00-22:00', change: 'up' },
+      { label: '周末互动率', value: '环比增长32%', change: 'up' },
+      { label: '日均发布量', value: '同比增长25%', change: 'up' }
     ]
   },
   {
@@ -48,9 +48,9 @@ const generateMockTrendData = (): TrendData[] => [
       gradient: 'bg-gradient-to-br'
     },
     trends: [
-      { label: '最受欢迎话题', value: '#美食探店', change: 'up' },
-      { label: '用户互动最高', value: '#生活方式', change: 'up' },
-      { label: '新增热门标签', value: '#家居布置', change: 'same' }
+      { label: '活跃用户数', value: '日均增长15%', change: 'up' },
+      { label: '用户留存率', value: '环比提升8%', change: 'up' },
+      { label: '互动转化率', value: '达到45%', change: 'same' }
     ]
   },
   {
@@ -64,9 +64,9 @@ const generateMockTrendData = (): TrendData[] => [
       gradient: 'bg-gradient-to-br'
     },
     trends: [
-      { label: '热门标题关键词', value: '#旅行攻略', change: 'up' },
-      { label: '美妆类热词', value: '#新品试用', change: 'down' },
-      { label: '科技类热词', value: '#数码评测', change: 'up' }
+      { label: '优质内容占比', value: '提升至38%', change: 'up' },
+      { label: '内容多样性', value: '类型增加12%', change: 'up' },
+      { label: '平均观看时长', value: '增长23%', change: 'up' }
     ]
   },
   {
@@ -80,37 +80,102 @@ const generateMockTrendData = (): TrendData[] => [
       gradient: 'bg-gradient-to-br'
     },
     trends: [
-      { label: '最具传播力', value: '#创意特效', change: 'up' },
-      { label: '热搜引发话题', value: '#夏季穿搭', change: 'up' },
-      { label: '地域传播热点', value: '#本地美食', change: 'same' }
+      { label: '分享转发率', value: '环比增长28%', change: 'up' },
+      { label: '二次传播度', value: '提升至2.8', change: 'up' },
+      { label: '影响力指数', value: '达到4.2', change: 'same' }
+    ]
+  },
+  {
+    id: 5,
+    type: 'interaction',
+    title: '互动效果分析',
+    icon: 'thumb_up',
+    color: {
+      primary: 'from-pink-500',
+      secondary: 'to-pink-700',
+      gradient: 'bg-gradient-to-br'
+    },
+    trends: [
+      { label: '评论互动率', value: '提升至18%', change: 'up' },
+      { label: '点赞转化率', value: '增长22%', change: 'up' },
+      { label: '收藏率变化', value: '上升15%', change: 'up' }
+    ]
+  },
+  {
+    id: 6,
+    type: 'growth',
+    title: '增长指标追踪',
+    icon: 'trending_up',
+    color: {
+      primary: 'from-cyan-500',
+      secondary: 'to-cyan-700',
+      gradient: 'bg-gradient-to-br'
+    },
+    trends: [
+      { label: '新增用户数', value: '日均3.2万', change: 'up' },
+      { label: '活跃度提升', value: '环比增长19%', change: 'up' },
+      { label: '用户粘性', value: '提升12%', change: 'same' }
+    ]
+  },
+  {
+    id: 7,
+    type: 'region',
+    title: '区域分布洞察',
+    icon: 'location_on',
+    color: {
+      primary: 'from-teal-500',
+      secondary: 'to-teal-700',
+      gradient: 'bg-gradient-to-br'
+    },
+    trends: [
+      { label: '一线城市占比', value: '增长至42%', change: 'up' },
+      { label: '下沉市场增长', value: '提升28%', change: 'up' },
+      { label: '地域分布度', value: '扩展15%', change: 'up' }
+    ]
+  },
+  {
+    id: 8,
+    type: 'topic',
+    title: '话��趋势分析',
+    icon: 'tag',
+    color: {
+      primary: 'from-indigo-500',
+      secondary: 'to-indigo-700',
+      gradient: 'bg-gradient-to-br'
+    },
+    trends: [
+      { label: '热门话题增长', value: '环比增长35%', change: 'up' },
+      { label: '话题参与度', value: '提升至26%', change: 'up' },
+      { label: '话题持续性', value: '延长42%', change: 'up' }
     ]
   }
 ];
+
+// 调整旋转半径和角度计算
+const radius = 400; // 增加旋转半径以适应更多卡片
+const angleStep = 360 / 8; // 8张卡片的角度间隔
 
 export function TrendCard3D() {
   const [rotation, setRotation] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [trends] = useState(generateMockTrendData());
   
-  // 使用 requestAnimationFrame 实现匀速旋转
+  // 使用 requestAnimationFrame 实现持续匀速旋转
   useEffect(() => {
     let animationFrameId: number;
     let lastTimestamp: number;
-    const rotationSpeed = 0.05; // 增加旋转速度，从 0.02 调整到 0.05
+    const rotationSpeed = 0.015; // 进一步降低速度使旋转更平滑
 
     const animate = (timestamp: number) => {
-      if (!isAutoPlay) {
-        lastTimestamp = timestamp;
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
-
       if (!lastTimestamp) {
         lastTimestamp = timestamp;
       }
 
-      const delta = timestamp - lastTimestamp;
-      setRotation(prev => (prev + rotationSpeed * delta) % 360);
+      if (isAutoPlay) {
+        const delta = timestamp - lastTimestamp;
+        setRotation(prev => (prev + rotationSpeed * delta) % 360);
+      }
+      
       lastTimestamp = timestamp;
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -221,8 +286,9 @@ export function TrendCard3D() {
           }}
         >
           {trends.map((trend, index) => {
-            const angle = (360 / trends.length) * index;
-            const radius = 300; // 旋转半径
+            const angle = angleStep * index;
+            const currentAngle = (rotation - angle) * Math.PI / 180;
+            const opacity = Math.cos(currentAngle) * 0.5 + 0.5;
 
             return (
               <div
@@ -241,9 +307,8 @@ export function TrendCard3D() {
                   `,
                   left: '50%',
                   top: '50%',
+                  opacity: opacity > 0 ? opacity : 0,
                   transition: 'none', // 移除过渡效果
-                  opacity: Math.cos((rotation - angle) * Math.PI / 180) > 0 ? 
-                          Math.cos((rotation - angle) * Math.PI / 180) * 0.5 + 0.5 : 0
                 }}
               >
                 {/* 卡片内容布局 */}
