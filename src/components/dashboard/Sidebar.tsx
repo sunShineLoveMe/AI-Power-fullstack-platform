@@ -37,7 +37,7 @@ const menuItems = [
       {
         name: '任务监控',
         path: '/dashboard/agent/monitor',
-        icon: 'monitoring'
+        icon: 'monitor'
       }
     ]
   },
@@ -58,24 +58,50 @@ export default function Sidebar() {
       <div className="flex-1 p-6">
         <div className="space-y-2">
           {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                pathname === item.path
-                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
-            >
-              <span className={`material-icons-round text-xl ${
-                pathname === item.path
-                  ? 'text-blue-400'
-                  : 'text-slate-400 group-hover:text-slate-200'
-              }`}>
-                {item.icon}
-              </span>
-              <span className="font-medium">{item.name}</span>
-            </Link>
+            <div key={item.path}>
+              <Link
+                href={item.path}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  pathname === item.path
+                    ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                }`}
+              >
+                <span className={`material-icons-round text-xl ${
+                  pathname === item.path
+                    ? 'text-blue-400'
+                    : 'text-slate-400 group-hover:text-slate-200'
+                }`}>
+                  {item.icon}
+                </span>
+                <span className="font-medium">{item.name}</span>
+              </Link>
+
+              {item.subItems && (
+                <div className="ml-6 mt-1 space-y-1">
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.path}
+                      href={subItem.path}
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+                        pathname === subItem.path
+                          ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                      }`}
+                    >
+                      <span className={`material-icons-round text-lg ${
+                        pathname === subItem.path
+                          ? 'text-blue-400'
+                          : 'text-slate-400 group-hover:text-slate-200'
+                      }`}>
+                        {subItem.icon}
+                      </span>
+                      <span className="font-medium text-sm">{subItem.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
