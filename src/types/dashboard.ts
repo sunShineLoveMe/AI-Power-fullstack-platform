@@ -7,7 +7,7 @@ export interface HotWord {
   id: string;
   word: string;
   count: number;
-  change: 'up' | 'down';
+  change: 'up' | 'down' | 'same';
   trend: { timestamp: string; value: number }[];
 }
 

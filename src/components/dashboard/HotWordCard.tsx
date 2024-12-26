@@ -32,39 +32,35 @@ interface HotWordCardProps {
 }
 
 export function HotWordCard({ data, flipDelay, flipInterval }: HotWordCardProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [rotation, setRotation] = useState(0);
   const [lastUpdateTime] = useState(new Date().toLocaleString('zh-CN'));
 
-  // 自动翻转效果
+  // 持续旋转效果
   useEffect(() => {
-    // 初始延迟翻转
+    // 初始延迟
     const initialDelay = setTimeout(() => {
-      setIsFlipped(true);
+      setRotation(180);
     }, flipDelay);
 
-    // 设置定期翻转
-    const flipTimer = setInterval(() => {
-      setIsFlipped(prev => !prev);
+    // 持续旋转
+    const rotateTimer = setInterval(() => {
+      setRotation(prev => prev + 180);  // 每次增加180度，实现逆时针旋转
     }, flipInterval);
 
     return () => {
       clearTimeout(initialDelay);
-      clearInterval(flipTimer);
+      clearInterval(rotateTimer);
     };
   }, [flipDelay, flipInterval]);
 
   return (
     <div className="perspective-1000">
       <div
-        className={`
-          relative w-full h-[500px]
-          transition-all ease-in-out duration-[3000ms] transform-style-3d
-          cursor-pointer
-          ${isFlipped ? 'rotate-y-180' : 'rotate-y-0'}
-        `}
+        className="relative w-full h-[500px] transform-style-3d cursor-pointer"
         style={{
           transformStyle: 'preserve-3d',
-          transition: 'all 6000ms ease-in-out',
+          transition: 'all 3000ms ease-in-out',
+          transform: `rotateY(${rotation}deg)`
         }}
       >
         {/* 正面 */}

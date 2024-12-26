@@ -464,21 +464,6 @@ export function RadarChart({ platform }: RadarChartProps) {
           className="filter drop-shadow-lg relative z-10"
         />
       </div>
-
-      {/* 平台标识 */}
-      <div className="absolute top-2 right-2 text-xs bg-slate-800/50 px-3 py-1.5 rounded-full
-        border border-slate-700/50 backdrop-blur-sm flex items-center space-x-2 z-20">
-        <span className="material-icons-round text-sm">
-          {platform === 'xiaohongshu' ? 'favorite' : 
-           platform === 'douyin' ? 'music_note' : 
-           'play_circle'}
-        </span>
-        <span className="text-slate-300">
-          {platform === 'xiaohongshu' ? '小红书' : 
-           platform === 'douyin' ? '抖音' : 
-           'B站'}热词分析
-        </span>
-      </div>
     </div>
   );
 } 

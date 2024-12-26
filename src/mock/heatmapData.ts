@@ -54,5 +54,31 @@ export const mockHeatMapData: HeatMapData[] = [
     shareCount: 2876,
     avgHeat: 12324
   },
-  // ... 可以添加更多数据
+  {
+    id: 6,
+    tag: "二次元",
+    likedCount: 45678,
+    collectedCount: 23456,
+    commentCount: 6789,
+    shareCount: 4567,
+    avgHeat: 20123
+  },
+  {
+    id: 7,
+    tag: "宠物日常",
+    likedCount: 34567,
+    collectedCount: 16789,
+    commentCount: 5678,
+    shareCount: 3456,
+    avgHeat: 15123
+  },
+  {
+    id: 8,
+    tag: "游戏实况",
+    likedCount: 56789,
+    collectedCount: 28976,
+    commentCount: 8765,
+    shareCount: 5678,
+    avgHeat: 25052
+  }
 ]; 

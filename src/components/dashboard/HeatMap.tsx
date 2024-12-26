@@ -12,11 +12,20 @@ export function HeatMap() {
 
   // 生成16条数据
   useEffect(() => {
-    const extendedData = Array(16).fill(null).map((_, index) => ({
-      ...mockHeatMapData[index % mockHeatMapData.length],
-      id: index, // 确保每条数据有唯一id
-      tag: `热词标签 ${index + 1}` // 生成不同的标签名
-    }));
+    // 复制原始数据并添加新的变体
+    const extendedData = [
+      ...mockHeatMapData,
+      ...mockHeatMapData.map((item, index) => ({
+        ...item,
+        id: item.id + mockHeatMapData.length,
+        tag: `${item.tag} Plus`,
+        likedCount: Math.floor(item.likedCount * 1.2),
+        collectedCount: Math.floor(item.collectedCount * 1.2),
+        commentCount: Math.floor(item.commentCount * 1.2),
+        shareCount: Math.floor(item.shareCount * 1.2),
+        avgHeat: Math.floor(item.avgHeat * 1.2)
+      }))
+    ];
     setData(extendedData);
   }, []);
 

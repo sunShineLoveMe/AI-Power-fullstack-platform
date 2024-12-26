@@ -68,13 +68,26 @@ export function DashboardClient({ initialData }: { initialData: any }) {
             key={platform.platform}
             className="bg-slate-800/30 backdrop-blur-xl rounded-xl p-6 border border-slate-700/50"
           >
-            <div className="flex items-center space-x-3 mb-4">
-              <span className="material-icons-round text-2xl text-blue-400">
-                {platform.icon}
-              </span>
-              <h2 className="text-xl font-bold text-slate-100">
-                {platform.name}热词分析
-              </h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <span className="material-icons-round text-2xl text-blue-400">
+                  {platform.icon}
+                </span>
+                <h2 className="text-xl font-bold text-slate-100">
+                  {platform.name}热词分析
+                </h2>
+              </div>
+              <div className="text-xs bg-slate-800/50 px-3 py-1.5 rounded-full
+                border border-slate-700/50 backdrop-blur-sm flex items-center space-x-2">
+                <span className="material-icons-round text-sm">
+                  {platform.platform === 'xiaohongshu' ? 'favorite' : 
+                   platform.platform === 'douyin' ? 'music_note' : 
+                   'play_circle'}
+                </span>
+                <span className="text-slate-300">
+                  {platform.name}雷达扫描
+                </span>
+              </div>
             </div>
             <RadarChart platform={platform.platform} />
           </div>
