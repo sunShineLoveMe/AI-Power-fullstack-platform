@@ -19,6 +19,28 @@ const menuItems = [
     path: '/dashboard/analytics', 
     icon: 'analytics'
   },
+  {
+    name: 'Agent调度中心',
+    path: '/dashboard/agent',
+    icon: 'precision_manufacturing',
+    subItems: [
+      {
+        name: '工作流编排',
+        path: '/dashboard/agent/workflow',
+        icon: 'account_tree'
+      },
+      {
+        name: 'Agent管理',
+        path: '/dashboard/agent/management',
+        icon: 'smart_toy'
+      },
+      {
+        name: '任务监控',
+        path: '/dashboard/agent/monitor',
+        icon: 'monitoring'
+      }
+    ]
+  },
   { 
     name: '系统设置', 
     path: '/dashboard/settings', 

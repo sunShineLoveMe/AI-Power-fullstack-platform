@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AI智能Saas平台",
-  description: "栉云科技加速企业数字化转型",
+  title: "AI+全维智析数据中枢",
+  description: "AI+全维智析数据中枢",
 };
 
 export default function RootLayout({

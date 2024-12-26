@@ -20,13 +20,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Hello Next.js</h1>
-      <h2>profile用Link组件跳转</h2>
-      <Link href="/profile">profile用Link组件跳转</Link>
-      <h2>profile用useRouter跳转 client组件</h2>
-      <button type="button" onClick={() => router.push('/profile')}>
-        profile用useRouter跳转
-      </button>
+      <h1>AI+全维智析数据中枢</h1>
     </div>
   );
 }
