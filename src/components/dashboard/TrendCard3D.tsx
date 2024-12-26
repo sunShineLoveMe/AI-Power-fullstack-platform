@@ -88,132 +88,213 @@ const generateMockTrendData = (): TrendData[] => [
 ];
 
 export function TrendCard3D() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [rotation, setRotation] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [trends] = useState(generateMockTrendData());
-
-  // 自动轮播
+  
+  // 使用 requestAnimationFrame 实现匀速旋转
   useEffect(() => {
-    if (!isAutoPlay) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % trends.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [isAutoPlay, trends.length]);
+    let animationFrameId: number;
+    let lastTimestamp: number;
+    const rotationSpeed = 0.05; // 增加旋转速度，从 0.02 调整到 0.05
 
-  // 在客户端注入样式
+    const animate = (timestamp: number) => {
+      if (!isAutoPlay) {
+        lastTimestamp = timestamp;
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
+      if (!lastTimestamp) {
+        lastTimestamp = timestamp;
+      }
+
+      const delta = timestamp - lastTimestamp;
+      setRotation(prev => (prev + rotationSpeed * delta) % 360);
+      lastTimestamp = timestamp;
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isAutoPlay]);
+
+  // 更新样式注入
   useEffect(() => {
     const styles = `
-      .carousel-3d {
+      .carousel-stage {
         perspective: 2000px;
+        perspective-origin: 50% 50%;
+      }
+
+      .carousel-container {
         transform-style: preserve-3d;
+        transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .carousel-item {
+        position: absolute;
         transform-style: preserve-3d;
         backface-visibility: hidden;
-        transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
+      .carousel-item::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.05)
+        );
+        border-radius: inherit;
+        pointer-events: none;
       }
 
-      .animate-shimmer {
-        animation: shimmer 2s infinite;
+      .carousel-item::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.15),
+          transparent
+        );
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .carousel-item:hover::after {
+        opacity: 1;
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-5px) scale(1.02);
+        }
       }
     `;
 
+    let styleSheet: HTMLStyleElement | null = null;
+
     // 只在客户端执行
     if (typeof document !== 'undefined') {
-      const styleSheet = document.createElement("style");
+      styleSheet = document.createElement("style");
       styleSheet.type = "text/css";
       styleSheet.innerText = styles;
       document.head.appendChild(styleSheet);
-
-      // 清理函数
-      return () => {
-        document.head.removeChild(styleSheet);
-      };
     }
+
+    // 清理函数
+    return () => {
+      if (styleSheet && document) {
+        document.head.removeChild(styleSheet);
+      }
+    };
   }, []);
 
   return (
     <div className="relative w-full h-[380px] flex items-center justify-center -mt-8">
-      {/* 背景装饰 */}
+      {/* 背景效果 */}
       <div className="absolute inset-0 bg-gradient-radial from-slate-800/50 via-transparent to-transparent" />
       
-      {/* 3D 轮播容器 */}
-      <div className="carousel-3d relative w-[500px] h-[300px]">
-        {trends.map((trend, index) => (
-          <div
-            key={trend.id}
-            className={`carousel-item absolute w-[280px] h-[220px] 
-              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-              ${trend.color.gradient} ${trend.color.primary} ${trend.color.secondary}
-              rounded-lg p-2.5 shadow-xl backdrop-blur-xl border border-white/10`}
-            style={{
-              transform: `
-                translate(-50%, -50%) 
-                rotateY(${(index - currentIndex) * (360 / trends.length)}deg)
-                translateZ(250px)
-              `,
-              transformOrigin: 'center center',
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              opacity: Math.abs(index - currentIndex) <= 1 ? 1 : 0.5,
-            }}
-          >
-            {/* 调整卡片内容布局 */}
-            <div className="relative h-full flex flex-col">
-              {/* 头部 - 进一步减小间距 */}
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center space-x-1">
-                  <span className="material-icons-round text-base text-white/90">
-                    {trend.icon}
-                  </span>
-                  <h3 className="text-sm font-bold text-white">
-                    {trend.title}
-                  </h3>
+      {/* 3D 舞台 */}
+      <div className="carousel-stage w-[600px] h-[300px] relative">
+        {/* 旋转容器 */}
+        <div 
+          className="carousel-container absolute w-full h-full"
+          style={{
+            transform: `rotateY(${rotation}deg)`,
+            transition: 'none' // 移除过渡效果，使用 requestAnimationFrame 控制
+          }}
+        >
+          {trends.map((trend, index) => {
+            const angle = (360 / trends.length) * index;
+            const radius = 300; // 旋转半径
+
+            return (
+              <div
+                key={trend.id}
+                className={`
+                  carousel-item w-[280px] h-[220px] 
+                  ${trend.color.gradient} ${trend.color.primary} ${trend.color.secondary}
+                  rounded-xl p-2.5 backdrop-blur-xl
+                  shadow-[0_0_15px_rgba(255,255,255,0.1)]
+                `}
+                style={{
+                  transform: `
+                    translate(-50%, -50%)
+                    rotateY(${angle}deg)
+                    translateZ(${radius}px)
+                  `,
+                  left: '50%',
+                  top: '50%',
+                  transition: 'none', // 移除过渡效果
+                  opacity: Math.cos((rotation - angle) * Math.PI / 180) > 0 ? 
+                          Math.cos((rotation - angle) * Math.PI / 180) * 0.5 + 0.5 : 0
+                }}
+              >
+                {/* 卡片内容布局 */}
+                <div className="relative h-full flex flex-col">
+                  <div className="flex items-center space-x-1.5 mb-2">
+                    <span className="material-icons-round text-base text-white/90">
+                      {trend.icon}
+                    </span>
+                    <h3 className="text-sm font-bold text-white">
+                      {trend.title}
+                    </h3>
+                  </div>
+
+                  <div className="space-y-1.5 flex-1">
+                    {trend.trends.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-white/10 rounded-lg p-1.5
+                          backdrop-blur-sm transition-transform
+                          hover:scale-[1.02] duration-300"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-white/80 text-[10px]">
+                            {item.label}
+                          </span>
+                          <span className={`
+                            material-icons-round text-[8px]
+                            ${item.change === 'up' ? 'text-green-400' :
+                              item.change === 'down' ? 'text-red-400' :
+                              'text-white/60'}
+                          `}>
+                            {item.change === 'up' ? 'trending_up' :
+                             item.change === 'down' ? 'trending_down' :
+                             'trending_flat'}
+                          </span>
+                        </div>
+                        <div className="text-xs font-semibold text-white mt-0.5">
+                          {item.value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              {/* 趋势列表 - 进一步减小间距和字体 */}
-              <div className="space-y-1 flex-1">
-                {trend.trends.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white/10 rounded-md p-1 backdrop-blur-lg
-                      transform transition-all duration-300 hover:scale-105"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/80 text-[10px]">{item.label}</span>
-                      <span className={`material-icons-round text-[8px]
-                        ${item.change === 'up' ? 'text-green-400' :
-                          item.change === 'down' ? 'text-red-400' :
-                          'text-white/60'}`}
-                      >
-                        {item.change === 'up' ? 'trending_up' :
-                         item.change === 'down' ? 'trending_down' :
-                         'trending_flat'}
-                      </span>
-                    </div>
-                    <div className="text-xs font-semibold text-white mt-0.5">
-                      {item.value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
 
       {/* 控制按钮 */}
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
         <button
           onClick={() => setIsAutoPlay(!isAutoPlay)}
           className="p-2 rounded-full bg-white/10 hover:bg-white/20 

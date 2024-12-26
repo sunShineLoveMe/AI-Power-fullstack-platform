@@ -76,7 +76,7 @@ export function DashboardClient({ initialData }: { initialData: any }) {
                 {platform.name}热词分析
               </h2>
             </div>
-            <RadarChart data={platform} platform={platform.platform} />
+            <RadarChart platform={platform.platform} />
           </div>
         ))}
       </div>

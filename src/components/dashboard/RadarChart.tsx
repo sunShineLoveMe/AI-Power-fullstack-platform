@@ -244,7 +244,7 @@ export function RadarChart({ platform }: RadarChartProps) {
           font: {
             size: 12,
             family: "'Inter', sans-serif",
-            weight: '500'
+            weight: 500
           }
         },
         ticks: {
@@ -254,7 +254,8 @@ export function RadarChart({ platform }: RadarChartProps) {
           backdropPadding: 2,
           font: {
             size: 10,
-            family: "'Inter', sans-serif"
+            family: "'Inter', sans-serif",
+            weight: 400
           },
           // 计算合适的步长
           stepSize: Math.ceil(Math.max(...interpolatedData.hotWords.slice(0, 5).flatMap(
@@ -290,7 +291,7 @@ export function RadarChart({ platform }: RadarChartProps) {
           font: {
             size: 12,
             family: "'Inter', sans-serif",
-            weight: '500'
+            weight: 500
           },
           usePointStyle: true,
           pointStyle: 'circle',
@@ -308,11 +309,12 @@ export function RadarChart({ platform }: RadarChartProps) {
         titleFont: {
           size: 13,
           family: "'Inter', sans-serif",
-          weight: '600'
+          weight: 600
         },
         bodyFont: {
           size: 12,
-          family: "'Inter', sans-serif"
+          family: "'Inter', sans-serif",
+          weight: 400
         },
         padding: 12,
         boxPadding: 6,
@@ -349,7 +351,7 @@ export function RadarChart({ platform }: RadarChartProps) {
     },
     animation: {
       duration: 1000,
-      easing: 'easeInOutQuart',
+      easing: 'easeInOutQuart' as const,
       delay: (context: any) => context.dataIndex * 100
     },
     maintainAspectRatio: false,
