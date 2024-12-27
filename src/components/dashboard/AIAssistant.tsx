@@ -48,21 +48,34 @@ export function AIAssistant() {
     setIsLoading(true);
 
     try {
-      // TODO: 实现与AI大模型的实际通信
-      const response = await new Promise(resolve => 
-        setTimeout(() => resolve("这是AI助手的模拟回复"), 1000)
-      );
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: input,
+          modelType: 'doubao', // 或 'coze'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to get AI response');
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response as string,
+        content: data.response,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('AI响应错误:', error);
+      // 可以添加错误提示UI
     } finally {
       setIsLoading(false);
     }
