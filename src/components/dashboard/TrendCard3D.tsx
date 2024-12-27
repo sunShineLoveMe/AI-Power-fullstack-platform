@@ -288,7 +288,22 @@ export function TrendCard3D() {
           {trends.map((trend, index) => {
             const angle = angleStep * index;
             const currentAngle = (rotation - angle) * Math.PI / 180;
-            const opacity = Math.cos(currentAngle) * 0.5 + 0.5;
+            
+            // 修改透明度计算逻辑
+            const normalizedAngle = ((currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+            let opacity = 0;
+            
+            // 前180度逐渐显示
+            if (normalizedAngle <= Math.PI) {
+              opacity = Math.sin(normalizedAngle);
+            }
+            // 后180度逐渐隐藏
+            else {
+              opacity = Math.sin(2 * Math.PI - normalizedAngle);
+            }
+
+            // 应用缓动效果
+            opacity = Math.pow(opacity, 0.8); // 使过渡更平滑
 
             return (
               <div
@@ -307,8 +322,9 @@ export function TrendCard3D() {
                   `,
                   left: '50%',
                   top: '50%',
-                  opacity: opacity > 0 ? opacity : 0,
-                  transition: 'none', // 移除过渡效果
+                  opacity: opacity,
+                  transition: 'none',
+                  visibility: opacity < 0.01 ? 'hidden' : 'visible', // 性能优化
                 }}
               >
                 {/* 卡片内容布局 */}
