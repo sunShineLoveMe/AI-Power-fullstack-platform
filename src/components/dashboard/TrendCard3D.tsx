@@ -136,7 +136,7 @@ const generateMockTrendData = (): TrendData[] => [
   {
     id: 8,
     type: 'topic',
-    title: '话��趋势分析',
+    title: '热门话题趋势分析',
     icon: 'tag',
     color: {
       primary: 'from-indigo-500',

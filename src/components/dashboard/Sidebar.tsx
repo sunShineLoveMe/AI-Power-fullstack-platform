@@ -9,11 +9,11 @@ const menuItems = [
     path: '/dashboard', 
     icon: 'dashboard'
   },
-  { 
-    name: '用户管理', 
-    path: '/dashboard/users', 
-    icon: 'group'
-  },
+  // { 
+  //   name: '用户管理', 
+  //   path: '/dashboard/users', 
+  //   icon: 'group'
+  // },
   { 
     name: '数据分析', 
     path: '/dashboard/analytics', 
