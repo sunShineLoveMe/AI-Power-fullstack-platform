@@ -36,9 +36,9 @@ export default async function DashboardLayout({
           </div>
         </main>
 
-        <div className="absolute right-8 bottom-8">
+        {/* <div className="absolute right-8 bottom-8">
           <AIAssistant />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex-none">
