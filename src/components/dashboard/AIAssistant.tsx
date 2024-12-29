@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { base } from 'framer-motion/client';
 
 // 声明全局类型
 declare global {
@@ -53,6 +54,32 @@ export function AIAssistant() {
           },
           componentProps: {
             title: 'Coze',
+          },
+          ui: {
+             // 用户信息
+            userInfo: {
+                url: 'https://iknow-pic.cdn.bcebos.com/a9d3fd1f4134970af7a1f9b187cad1c8a6865d5a',
+                nickname: '小智',
+            },
+            // base: {
+            //     icon: 'http://sp8lv4409.hd-bkt.clouddn.com/logo.png',
+            // },
+            footer: {
+                isShow: true,
+                expressionText: 'Powered by 栉云科技AI+全维智析基座大模型',
+            },
+            chatBot: {
+                title: "全维智析基座大模型-智能体",
+                uploadable: true,
+                // width: 800,
+                el: undefined,
+                onHide: () => {
+                  // todo...
+                },
+                onShow: () => {
+                  // todo...
+                },
+              },
           },
         });
       }
