@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import WorkDetailModal from './WorkDetailModal';
 
 interface Work {
   id: number;
@@ -10,6 +11,14 @@ interface Work {
   comments: number;
   shares: number;
   coverUrl: string;
+}
+
+interface WorkDetail extends Work {
+  description: string;
+  playCount: number;
+  completionRate: number;
+  retentionData: number[];
+  tags: string[];
 }
 
 interface AuthorProfile {
@@ -22,7 +31,7 @@ interface AuthorProfile {
     name: string;
     color: string;
   }[];
-  works: Work[];
+  works: WorkDetail[];
 }
 
 export default function AuthorProfile() {
@@ -31,6 +40,8 @@ export default function AuthorProfile() {
     keyword: ''
   });
   
+  const [selectedWork, setSelectedWork] = useState<WorkDetail | null>(null);
+
   const [profile] = useState<AuthorProfile>({
     name: "作者昵称",
     location: "北京",
@@ -48,8 +59,13 @@ export default function AuthorProfile() {
         title: "夏日清爽妆容分享", 
         views: 10000, 
         comments: 500, 
-        shares: 200, 
-        coverUrl: "https://picsum.photos/seed/work1/800/450" 
+        shares: 200,
+        coverUrl: "https://picsum.photos/seed/work1/800/450",
+        description: "这是一个适合夏季的清爽妆容教程，轻松打造清新自然的妆容效果...",
+        playCount: 500000,
+        completionRate: 30,
+        retentionData: [100, 95, 85, 70, 60, 55, 50, 45, 40, 35],
+        tags: ["夏季妆容", "清透妆感", "防晒美妆"]
       },
       { 
         id: 2, 
@@ -57,7 +73,12 @@ export default function AuthorProfile() {
         views: 15000, 
         comments: 700, 
         shares: 300, 
-        coverUrl: "https://picsum.photos/seed/work2/800/450" 
+        coverUrl: "https://picsum.photos/seed/work2/800/450",
+        description: "这是一个关于职场穿搭的教程，教你如何穿出专业又不失时尚感的穿搭...",
+        playCount: 400000,
+        completionRate: 25,
+        retentionData: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
+        tags: ["职场穿搭", "时尚感", "职业装"]
       },
       { 
         id: 3, 
@@ -65,7 +86,12 @@ export default function AuthorProfile() {
         views: 20000, 
         comments: 1000, 
         shares: 500, 
-        coverUrl: "https://picsum.photos/seed/work3/800/450" 
+        coverUrl: "https://picsum.photos/seed/work3/800/450",
+        description: "这是一个快手早餐制作的教程，教你如何快速制作营养又美味的早餐...",
+        playCount: 300000,
+        completionRate: 20,
+        retentionData: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
+        tags: ["快手早餐", "营养早餐", "快手制作"]
       },
       { 
         id: 4, 
@@ -73,7 +99,12 @@ export default function AuthorProfile() {
         views: 25000, 
         comments: 1200, 
         shares: 600, 
-        coverUrl: "https://picsum.photos/seed/work4/800/450" 
+        coverUrl: "https://picsum.photos/seed/work4/800/450",
+        description: "这是一个关于居家收纳的教程，教你如何有效整理家居空间，提高生活质量...",
+        playCount: 200000,
+        completionRate: 15,
+        retentionData: [100, 80, 70, 60, 50, 40, 30, 20, 10, 5],
+        tags: ["居家收纳", "家居整理", "生活质量"]
       },
       { 
         id: 5, 
@@ -81,7 +112,12 @@ export default function AuthorProfile() {
         views: 30000, 
         comments: 1500, 
         shares: 800, 
-        coverUrl: "https://picsum.photos/seed/work5/800/450" 
+        coverUrl: "https://picsum.photos/seed/work5/800/450",
+        description: "这是一个关于护肤品使用顺序的教程，教你如何正确使用护肤品，达到最佳护肤效果...",
+        playCount: 100000,
+        completionRate: 10,
+        retentionData: [100, 80, 70, 60, 50, 40, 30, 20, 10, 5],
+        tags: ["护肤品使用", "护肤效果", "护肤品"]
       },
       { 
         id: 6, 
@@ -89,7 +125,12 @@ export default function AuthorProfile() {
         views: 35000, 
         comments: 2000, 
         shares: 1000, 
-        coverUrl: "https://picsum.photos/seed/work6/800/450" 
+        coverUrl: "https://picsum.photos/seed/work6/800/450",
+        description: "这是一个关于美食探店的日记，记录作者的美食探店经历和感受...",
+        playCount: 50000,
+        completionRate: 5,
+        retentionData: [100, 70, 60, 50, 40, 30, 20, 10, 5, 0],
+        tags: ["美食探店", "美食日记", "美食"]
       }
     ]
   });
@@ -221,7 +262,8 @@ export default function AuthorProfile() {
             {profile.works.map((work) => (
               <motion.div
                 key={work.id}
-                className="flex-none w-80 bg-slate-800/50 rounded-lg overflow-hidden hover:bg-slate-700/50 transition-colors duration-200"
+                className="flex-none w-80 bg-slate-800/50 rounded-lg overflow-hidden hover:bg-slate-700/50 transition-colors duration-200 cursor-pointer"
+                onClick={() => setSelectedWork(work)}
               >
                 <div className="h-48 bg-slate-700 overflow-hidden">
                   <img 
@@ -252,6 +294,16 @@ export default function AuthorProfile() {
           </div>
         </div>
       </div>
+
+      {/* 作品详情弹窗 */}
+      <AnimatePresence>
+        {selectedWork && (
+          <WorkDetailModal 
+            work={selectedWork} 
+            onClose={() => setSelectedWork(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 } 

@@ -14,7 +14,7 @@ export interface MenuItem {
 export const menuItems: MenuItem[] = [
   { 
     name: '仪表盘', 
-    path: '/dashboard', 
+    path: '/', 
     icon: 'dashboard'
   },
   
