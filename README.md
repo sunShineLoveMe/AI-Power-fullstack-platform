@@ -194,6 +194,24 @@ src/
 
 ## 新增文件说明
 
+### AI助手相关
+
+1. `/components/dashboard/AIAssistant.tsx`
+   - AI对话组件
+   - Coze SDK集成
+   - 消息处理
+   - UI交互设计
+
+2. `/components/agent/AgentManager.tsx`
+   - Agent配置管理
+   - 状态监控
+   - 性能优化
+
+3. `/app/dashboard/agent/management/page.tsx`
+   - Agent管理界面
+   - 配置面板
+   - 数据统计
+
 ### 认证相关
 1. `/app/login/*` - 登录模块
    - 登录页面和样式
@@ -243,6 +261,19 @@ DB_PORT=3306
 ```
 
 ## 主要功能模块
+
+### AI智能助手
+- **实时对话**
+  - 基于 Coze WebSDK
+  - 多轮对话支持
+  - 上下文理解
+  - 知识库集成
+
+- **界面特性**
+  - 悬浮式交互窗口
+  - 实时消息反馈
+  - 优雅的过渡动画
+  - 响应式设计
 
 ### 用户认证
 - 登录
