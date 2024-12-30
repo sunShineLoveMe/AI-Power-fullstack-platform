@@ -11,6 +11,7 @@ const menuItems = [
     path: '/dashboard', 
     icon: 'dashboard'
   },
+  
   {
     name: '全域画像',
     path: '/dashboard/portrait',
@@ -63,7 +64,29 @@ const menuItems = [
     ]
   },
   {
-    name: 'Agent调度中心',
+    name: '全维数据',
+    path: '/dashboard/analytics',
+    icon: 'data_exploration',
+    subItems: [
+      {
+        name: '热词中心',
+        path: '/dashboard/analytics/hotwords',
+        icon: 'tag'
+      },
+      {
+        name: '热度趋势',
+        path: '/dashboard/analytics/trends',
+        icon: 'trending_up'
+      },
+      {
+        name: '关联分析',
+        path: '/dashboard/analytics/correlation',
+        icon: 'hub'
+      }
+    ]
+  },
+  {
+    name: '智能体调度',
     path: '/dashboard/agent',
     icon: 'precision_manufacturing',
     subItems: [
@@ -87,13 +110,35 @@ const menuItems = [
   { 
     name: '系统设置', 
     path: '/dashboard/settings', 
-    icon: 'settings'
+    icon: 'settings',
+    subItems: [
+      {
+        name: '模型中心',
+        path: '/dashboard/settings/models',
+        icon: 'model_training'
+      },
+      {
+        name: '算法中心',
+        path: '/dashboard/settings/algorithms',
+        icon: 'schema'
+      },
+      {
+        name: '定时任务',
+        path: '/dashboard/settings/scheduler',
+        icon: 'schedule'
+      }
+    ]
   },
 ];
 
-// 添加展开状态管理
+// 修改展开状态管理，设置默认全部展开
 const useExpandedState = () => {
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  // 获取所有带有子菜单的路径作为初始展开状态
+  const initialExpandedItems = menuItems
+    .filter(item => item.subItems)
+    .map(item => item.path);
+
+  const [expandedItems, setExpandedItems] = useState<string[]>(initialExpandedItems);
 
   const toggleExpand = (path: string) => {
     setExpandedItems(prev => 
@@ -114,7 +159,7 @@ export default function Sidebar() {
     <aside className="bg-slate-900/50 backdrop-blur-xl w-64 border-r border-slate-700/50 h-full flex flex-col">
       <div className="h-4" />
       
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
         <div className="space-y-2">
           {menuItems.map((item) => (
             <div key={item.path}>
@@ -182,7 +227,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="p-6 border-t border-slate-700/50">
+      <div className="p-6 border-t border-slate-700/50 flex-shrink-0">
         <div className="flex items-center space-x-3 text-slate-400">
           <span className="material-icons-round text-xl">info</span>
           <span className="text-sm">版本 1.0.0</span>
