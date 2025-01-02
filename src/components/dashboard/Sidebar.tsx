@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { menuItems } from '@/config/menuItems';
@@ -28,7 +28,22 @@ const useExpandedState = () => {
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { expandedItems, toggleExpand } = useExpandedState();
+
+  // 处理菜单项点击
+  const handleMenuClick = (item: typeof menuItems[0]) => {
+    if (item.subItems) {
+      toggleExpand(item.path);
+    } else {
+      // 如果是仪表盘，跳转到 /dashboard
+      if (item.path === '/') {
+        router.push('/dashboard');
+      } else {
+        router.push(item.path);
+      }
+    }
+  };
 
   return (
     <aside className="bg-slate-900/50 backdrop-blur-xl w-64 border-r border-slate-700/50 h-full flex flex-col">
@@ -39,16 +54,16 @@ export default function Sidebar() {
           {menuItems.map((item) => (
             <div key={item.path}>
               <div
-                onClick={() => item.subItems && toggleExpand(item.path)}
+                onClick={() => handleMenuClick(item)}
                 className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
-                  pathname === item.path
+                  (pathname === item.path || (item.path === '/' && pathname === '/dashboard'))
                     ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
               >
                 <div className="flex items-center space-x-3">
                   <span className={`material-icons-round text-xl ${
-                    pathname === item.path
+                    (pathname === item.path || (item.path === '/' && pathname === '/dashboard'))
                       ? 'text-blue-400'
                       : 'text-slate-400 group-hover:text-slate-200'
                   }`}>

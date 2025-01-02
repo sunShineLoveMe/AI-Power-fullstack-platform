@@ -79,9 +79,9 @@ export function DashboardClient({ initialData }: { initialData: any }) {
       </div>
 
       {/* AI助手固定在可视区域 */}
-      {/* <div className="fixed bottom-0 right-0 z-50">
+      <div className="fixed bottom-0 right-0 z-50">
         <AIAssistant />
-      </div> */}
+      </div>
     </div>
   );
 } 
