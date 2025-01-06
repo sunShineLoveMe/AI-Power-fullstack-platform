@@ -17,7 +17,11 @@ export const menuItems: MenuItem[] = [
     path: '/',
     icon: 'dashboard'
   },
-  
+  {
+    name: '诊断智能专家问答',
+    path: '/dashboard/diagnostic',
+    icon: 'quiz',
+  },
   {
     name: '全域画像',
     path: '/dashboard/portrait',
@@ -130,4 +134,5 @@ export const menuItems: MenuItem[] = [
       }
     ]
   },
+  
 ]; 
